@@ -59,6 +59,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: Colors.grey[300],
         body: SafeArea(
           child: Column(
             children: [
@@ -291,7 +292,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         onPressed: () {},
                         icon: Image.asset(
                           "assets/images/extras.png",
-                          height: screenHeight * 0.030,
+                          height: screenHeight * 0.020,
                         ),
                       ),
                     ],

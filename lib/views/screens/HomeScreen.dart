@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:login_screen/controllers/homescreen_controller.dart';
 import 'package:login_screen/views/screens/Home.dart';
 import 'package:login_screen/views/screens/Settings.dart';
-import '../widgets/mywidgets.dart';
+
 
 final HomeScreenController homeScreenController = Get.put(HomeScreenController());
 final List<Widget> myScreens=[const Home(),const Settings()];
@@ -17,19 +17,36 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
 
       extendBodyBehindAppBar: true,
-      bottomNavigationBar: Obx(() => BottomNavigationBar(
-
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.vpn_key_outlined),label: "Vault"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings),label: "Settings"),
-          ],
-        showUnselectedLabels: true,
-        backgroundColor: Color.fromARGB(255, 231, 249, 242),
-        selectedItemColor: Colors.cyan,
-        unselectedItemColor: Colors.black,
-        currentIndex: homeScreenController.selectedScreenIndex.value,
-        onTap: (p)=> homeScreenController.updateSelectedIndex(p),
-      )
+      bottomNavigationBar: Obx(() => Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade500,
+          borderRadius: BorderRadius.only(topRight: Radius.circular(20),topLeft:  Radius.circular(20),)
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(50, 10, 50, 5),
+          child: GNav(
+            padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
+            backgroundColor: Colors.grey.shade500,
+            color: Colors.black,
+            activeColor: Colors.teal,
+            tabBackgroundColor: Colors.teal.shade900,
+            gap: 8,
+            tabs:
+              [
+                GButton(
+                  icon: Icons.vpn_key_outlined,
+                  text: "Vault",
+                ),
+                GButton(
+                  icon: Icons.settings,
+                  text: "Settings",
+                ),
+              ],
+            selectedIndex: homeScreenController.selectedScreenIndex.value,
+            onTabChange: (index) =>homeScreenController.updateSelectedIndex(index),
+          ),
+        ),
+      ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
@@ -59,7 +76,7 @@ class HomeScreen extends StatelessWidget {
 
         },
         // onPressed: ()=> bottomModal(context),
-        backgroundColor: Colors.cyan[200],
+        backgroundColor: Colors.teal[700],
         child: Icon(Icons.add, color: Colors.black54,),
       ),
 
