@@ -7,7 +7,7 @@ import 'package:login_screen/views/screens/Settings.dart';
 
 
 final HomeScreenController homeScreenController = Get.put(HomeScreenController());
-final List<Widget> myScreens=[const Home(),const Settings()];
+final List<Widget> myScreens=[const Home(), const Settings()];
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -18,32 +18,36 @@ class HomeScreen extends StatelessWidget {
 
       extendBodyBehindAppBar: true,
       bottomNavigationBar: Obx(() => Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.shade500,
-          borderRadius: BorderRadius.only(topRight: Radius.circular(20),topLeft:  Radius.circular(20),)
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(50, 10, 50, 5),
-          child: GNav(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
-            backgroundColor: Colors.grey.shade500,
-            color: Colors.black,
-            activeColor: Colors.teal,
-            tabBackgroundColor: Colors.teal.shade900,
-            gap: 8,
-            tabs:
-              [
-                GButton(
-                  icon: Icons.vpn_key_outlined,
-                  text: "Vault",
-                ),
-                GButton(
-                  icon: Icons.settings,
-                  text: "Settings",
-                ),
-              ],
-            selectedIndex: homeScreenController.selectedScreenIndex.value,
-            onTabChange: (index) =>homeScreenController.updateSelectedIndex(index),
+        padding: EdgeInsets.all(5),
+        color: Colors.white,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xFF303030),
+            borderRadius: BorderRadius.all(Radius.circular(20),)
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(50, 10, 50, 5),
+            child: GNav(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
+              backgroundColor: Color(0xFF303030),
+              color: Colors.white60,
+              activeColor: Color(0xFF64FFDA),
+              tabBackgroundColor: Color(0xFF212121),
+              gap: 8,
+              tabs:
+                [
+                  GButton(
+                    icon: Icons.vpn_key_outlined,
+                    text: "Vault",
+                  ),
+                  GButton(
+                    icon: Icons.settings,
+                    text: "Settings",
+                  ),
+                ],
+              selectedIndex: homeScreenController.selectedScreenIndex.value,
+              onTabChange: (index) =>homeScreenController.updateSelectedIndex(index),
+            ),
           ),
         ),
       ),
@@ -76,8 +80,8 @@ class HomeScreen extends StatelessWidget {
 
         },
         // onPressed: ()=> bottomModal(context),
-        backgroundColor: Colors.teal[700],
-        child: Icon(Icons.add, color: Colors.black54,),
+        backgroundColor:  Color(0xFF64FFDA),
+        child: Icon(Icons.add, color: Color(0xFF212121),),
       ),
 
 body: Obx(() {

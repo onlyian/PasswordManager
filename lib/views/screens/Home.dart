@@ -59,7 +59,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
