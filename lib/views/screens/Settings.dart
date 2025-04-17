@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../../controllers/switch_controller.dart';
+
+final switchController = Get.put(SwitchController());
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
 
   @override
   Widget build(BuildContext context) {
-    bool isSwitched =false;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -28,7 +34,10 @@ class Settings extends StatelessWidget {
                    title: Text("Require biometric",style: TextStyle(fontWeight: FontWeight.w500),),
                    subtitle: Padding( padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                        child:  Text("Use biometric authentication to access sensitive information")),
-                   trailing: Switch(value: isSwitched, onChanged: (value){}),
+                   trailing: Obx(() => Switch(
+                     value: switchController.isSwitched.value,
+                     onChanged: (value) => switchController.toggleSwitch(value),
+                   )),
                  ),
                  // ListTile(
                  //   leading: Icon(Icons.location_on_rounded),
@@ -40,7 +49,10 @@ class Settings extends StatelessWidget {
                    leading: Icon(Icons.brush_rounded),
                    title: Text("Theme",style: TextStyle(fontWeight: FontWeight.w500),),
                    subtitle: Text("Toggle app theme"),
-                   trailing: Switch(value: isSwitched, onChanged: (value){}),
+                   trailing: Obx(() => Switch(
+                     value: switchController.isSwitched2.value,
+                     onChanged: (value) => switchController.toggleSwitch2(value),
+                   )),
                  ),
 
                ],

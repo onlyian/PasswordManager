@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-
+import '../../configs/ConstantC.dart';
 import '../../configs/constants.dart';
 import '../../configs/mycolors.dart';
 import '../widgets/CategoryCard.dart';
@@ -210,7 +211,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   children: [
                     buildCategoryList("Passwords"),
                     buildCategoryList("Addresses"),
-                    buildCategoryList("Cards"),
+                    // buildCategoryList("Cards"),
+                     ListView.builder(
+                  itemCount: HomeScreenController.cards.length,
+                  itemBuilder: (context, index) {
+                    final card = HomeScreenController.cards[index];
+                    return Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            buildCopyRow('Name', card.title),
+                            buildCopyRow('Card Number', card.number),
+                            buildCopyRow('Provider', card.provider),
+                            buildCopyRow('Expiry Date', card.expiry),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
                   ],
                 ),
               ),
@@ -221,6 +242,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
+  Widget buildCopyRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(value, style: TextStyle(fontSize: 16)),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.copy),
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: value));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$label copied')),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
 
   Widget buildCategoryList(String label) {
@@ -238,69 +286,59 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: ListView.builder(
-              itemCount: Constants.passwordData.length,
-              itemBuilder: (context, index) {
-                final password = Constants.passwordData[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: 55,
-                            width: 55,
-                            decoration: BoxDecoration(
-                              color: logoBackground,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: FractionallySizedBox(
-                              heightFactor: 0.5,
-                              widthFactor: 0.5,
-                              child: Image.network(password.logoUrl),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  password.websiteName,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: _getIndicatorColor()),),
+              child: ListView.builder(
+                itemCount: Constants.passwordData.length,
+                itemBuilder: (context, index) {
+                  final password = Constants.passwordData[index];
+                  return ListTile(
+
+                    leading: Container(
+                                  height: 55,
+                                  width: 55,
+                                  decoration: BoxDecoration(
+                                    color: logoBackground,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: FractionallySizedBox(
+                                    heightFactor: 0.5,
+                                    widthFactor: 0.5,
+                                    child: Image.network(password.logoUrl),
                                   ),
                                 ),
-                                Text(
-                                  password.email,
-                                  style: const TextStyle(
-                                    color: Color.fromARGB(255, 39, 39, 39),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
+                    title: Text(
+                                    password.websiteName,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                )
-                              ],
-                            ),
+                    subtitle:  Text(
+                                    password.email,
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 39, 39, 39),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                    trailing: IconButton(
+                          onPressed: () {},
+                          icon: Image.asset(
+                            "assets/images/extras.png",
+                            height: screenHeight * 0.020,
                           ),
-                        ],
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Image.asset(
-                          "assets/images/extras.png",
-                          height: screenHeight * 0.020,
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+
+                  );
+                },
+              ),
             ),
           ),
+         const SizedBox(height: 5,)
         ],
       ),
     );

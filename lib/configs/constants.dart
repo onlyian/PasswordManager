@@ -2,6 +2,7 @@
 import '../models/password_model.dart';
 
 class Constants {
+
   static List<passwords> passwordData = [
     passwords("Netflix ", "kipruto@gmail.com",
         "https://pngimg.com/uploads/netflix/netflix_PNG15.png"),

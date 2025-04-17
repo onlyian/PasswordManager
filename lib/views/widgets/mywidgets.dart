@@ -213,7 +213,8 @@ Future<dynamic> bottomModal(BuildContext context) {
       isScrollControlled: true,
       context: context,
       builder: (BuildContext bc) {
-        return Wrap(children: <Widget>[
+        return Wrap(
+            children: <Widget>[
           Container(
             child: Container(
               decoration: new BoxDecoration(

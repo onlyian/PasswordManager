@@ -43,6 +43,7 @@ dependencies:
   google_nav_bar: ^5.0.7
   favicon: ^1.1.2
   cached_network_image: ^3.4.1
+  local_auth: ^2.3.0
 
 
 dev_dependencies:

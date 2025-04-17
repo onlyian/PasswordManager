@@ -21,7 +21,6 @@ Future<bool> registerUser(String username, String email, String password) async 
       "master_password_hash": password,
     },
   );
-
   if (response.statusCode == 200) //check if successful http connection(200 means success)
     //thus body data is correct:
   {
