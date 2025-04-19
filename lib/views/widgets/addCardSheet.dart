@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../../controllers/card_controller.dart';
 import '../../utils/saveCard.dart';
 import 'MyTextField.dart';
 
-final CardController cardControllerF = Get.find<CardController>();
+final CardController cardController = Get.find<CardController>();
 
 void showCardBottomSheet(
     BuildContext context,
@@ -107,7 +106,7 @@ void showCardBottomSheet(
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(saved ?  "Card saved successfully!" : "Failed to save card. Try again.")),
                             );
-                            cardControllerF.fetchCards();
+                            cardController.fetchCards();
                             cardNameController.clear();
                             cardholderController.clear();
                             cardNumberController.clear();
