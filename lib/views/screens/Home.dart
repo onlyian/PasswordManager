@@ -245,9 +245,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   Widget CategoryViewP(String label) {
     double screenHeight = MediaQuery.of(context).size.height;
-    if (passwordController.isLoading.value) {
-      return Center(child: CircularProgressIndicator());
-    }
+    // if (passwordController.isLoading.value) {
+    //   return Center(child: CircularProgressIndicator());
+    // }
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
       child: Column(

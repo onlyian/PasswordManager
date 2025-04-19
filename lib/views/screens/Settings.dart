@@ -19,42 +19,30 @@ class Settings extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Settings',
-          style: TextStyle(fontFamily: 'Anurati'),
+          style: TextStyle(fontFamily: 'Anurati',fontSize: 20,color: Colors.white),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.cyan,
         elevation: 0,
       ),
 
       body: Column(
                children: [
-                 ListTile(
-                   leading: Icon(Icons.fingerprint),
-                   title: Text("Require biometric",style: TextStyle(fontWeight: FontWeight.w500),),
-                   subtitle: Padding( padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                       child:  Text("Use biometric authentication to access sensitive information")),
-                   trailing: Obx(() => Switch(
-                     value: switchController.isSwitched.value,
-                     onChanged: (value) => switchController.toggleSwitch(value),
-                   )),
+                 SizedBox(height: 10,),
+                 Padding(
+                   padding: const EdgeInsets.all(5.0),
+                   child: ListTile(
+                     tileColor: Colors.blueGrey[100],
+                     shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(20),),
+                     leading: Icon(Icons.fingerprint),
+                     title: Text("Require biometric",style: TextStyle(fontWeight: FontWeight.w500),),
+                     subtitle: Padding( padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                         child:  Text("Use biometric authentication to access sensitive information")),
+                     trailing: Obx(() => Switch(
+                       value: switchController.isSwitched.value,
+                       onChanged: (value) => switchController.toggleSwitch(value),
+                     )),
+                   ),
                  ),
-                 ListTile(
-                   leading: Icon(Icons.brush_rounded),
-                   title: Text("Theme",style: TextStyle(fontWeight: FontWeight.w500),),
-                   subtitle: Text("Toggle app theme"),
-                   trailing: Obx(() => Switch(
-                     value: switchController.isSwitched2.value,
-                     onChanged: (value) => switchController.toggleSwitch2(value),
-                   )),
-                 ),
-                 SizedBox(height: 30,),
-                 ElevatedButton.icon(onPressed: ()async {
-
-                    if (await BiometricPassed()) {
-                      Get.snackbar('Success', 'Welcome back');
-                    }
-                              },
-                      label: Text("TOGGLE BIOMETRIC"),
-                        icon: Icon(Icons.fingerprint),),
                ],
              ),
 
