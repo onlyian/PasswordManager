@@ -5,9 +5,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:login_screen/controllers/TabChange_controller.dart';
 import '../../utils/urlFetcher.dart';
 
 var store = GetStorage();
+final TabChangeController tabController = Get.find<TabChangeController>();
 
 class Login extends StatelessWidget {
   Login({super.key});

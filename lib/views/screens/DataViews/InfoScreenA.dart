@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import '../../../models/address _model.dart';
+import '../Settings.dart';
 
+
+final controller = Get.put(PhoneController());
 
 class AddressInfoScreen extends StatelessWidget {
   final AddressModel address;
@@ -95,10 +99,26 @@ class AddressInfoScreen extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.phone),
               title: Text("Phone"),
-              subtitle: Text(address.phone),
-              trailing: IconButton(
-                icon: Icon(Icons.copy),
-                onPressed: () => copyToClipboard(context, "Phone", address.phone),
+              subtitle: Obx(() =>Text(controller.showPhone.value ? address.phone : "••••••••••"),),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                          icon: Obx(() => Icon(controller.showPhone.value ? Icons.visibility_off : Icons.visibility),),
+                          onPressed: ()async {
+                            if (!controller.showPhone.value){
+                        if (await BiometricPassed()) {
+                          controller.togglePhone();
+                        }
+                      }else{
+                              controller.togglePhone();
+                            }
+                    },
+                        ),
+                          IconButton(
+                          icon: Icon(Icons.copy),
+                          onPressed: () => copyToClipboard(context, "Phone", address.phone)),
+                ],
               ),
             ),
             ListTile(
@@ -132,5 +152,12 @@ class AddressInfoScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+class PhoneController extends GetxController {
+  final RxBool showPhone = false.obs;
+
+  void togglePhone() {
+    showPhone.value = !showPhone.value;
   }
 }

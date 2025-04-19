@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:login_screen/views/screens/Settings.dart';
 import '../../../models/card_model.dart';
 
 
@@ -90,15 +91,27 @@ class _CardInfoScreenState extends State<CardInfoScreen> {
                           IconButton(
                             icon: Icon(showCardNumber ? Icons.visibility_off : Icons.visibility,
                                 color: Colors.white),
-                            onPressed: () {
-                              setState(() {
-                                showCardNumber = !showCardNumber;
-                              });
+                            onPressed: () async {
+                              if(!showCardNumber){
+                                if (await BiometricPassed()) {
+                                  setState(() {
+                                    showCardNumber = !showCardNumber;
+                                  });
+                                }
+                              }else{
+                                setState(() {
+                                  showCardNumber = !showCardNumber;
+                                });
+                              }
                             },
                           ),
                           IconButton(
                             icon: Icon(Icons.copy, color: Colors.white),
-                            onPressed: () => copyToClipboard("Card Number", card.cardNumber),
+                            onPressed: () async {
+                              if (await BiometricPassed()){
+                                copyToClipboard("Card Number", card.cardNumber);
+                              }
+                            },
                           ),
                         ],
                       ),
@@ -130,15 +143,27 @@ class _CardInfoScreenState extends State<CardInfoScreen> {
                 children: [
                   IconButton(
                     icon: Icon(showCVV ? Icons.visibility_off : Icons.visibility),
-                    onPressed: () {
-                      setState(() {
-                        showCVV = !showCVV;
-                      });
+                    onPressed: ()async {
+                     if(!showCVV) {
+                        if (await BiometricPassed()) {
+                          setState(() {
+                            showCVV = !showCVV;
+                          });
+                        }
+                      }else{
+                       setState(() {
+                         showCVV = !showCVV;
+                       });
+                     }
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.copy),
-                    onPressed: () => copyToClipboard("CVV", card.cvv),
+                    onPressed: () async {
+                      if (await BiometricPassed()){
+                        copyToClipboard("CVV", card.cvv);
+                      }
+                    },
                   ),
                 ],
               ),

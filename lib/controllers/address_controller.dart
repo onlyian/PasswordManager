@@ -8,8 +8,10 @@ final store = GetStorage();
 
 class AddressController extends GetxController {
   var addresses = <AddressModel>[].obs;
+  var isLoading = true.obs;
 
   Future<void> fetchAddresses() async {
+    isLoading.value = true;
     String baseUrl = store.read("baseUrl") ?? await fetchApiUrl();
     Uri url = Uri.parse("$baseUrl/password-manager/address_read.php");
 
@@ -17,6 +19,7 @@ class AddressController extends GetxController {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         addresses.value = AddressModel.fromJsonList(response.body);
+        isLoading.value = false;
       } else {
         print('Failed to load addresses');
       }

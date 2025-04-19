@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../models/password_model.dart';
+import '../Settings.dart';
 
 class PasswordInfoScreen extends StatefulWidget {
   final PasswordModel password;
@@ -12,7 +13,7 @@ class PasswordInfoScreen extends StatefulWidget {
 }
 
 class _PasswordInfoScreenState extends State<PasswordInfoScreen> {
-  bool _obscurePassword = true;
+  bool _obscurePassword = false;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -93,7 +94,11 @@ class _PasswordInfoScreenState extends State<PasswordInfoScreen> {
               subtitle: Text(pass.username, style: TextStyle(fontWeight: FontWeight.bold)),
               trailing: IconButton(
                 icon: Icon(Icons.copy),
-                onPressed: () => _copyToClipboard("Username", pass.username),
+                onPressed: () async {
+                 if(await BiometricPassed()) {
+                    _copyToClipboard("Username", pass.username);
+                  }
+                },
               ),
             ),
 
@@ -104,7 +109,11 @@ class _PasswordInfoScreenState extends State<PasswordInfoScreen> {
               subtitle: Text(pass.email, style: TextStyle(fontWeight: FontWeight.bold)),
               trailing: IconButton(
                 icon: Icon(Icons.copy),
-                onPressed: () => _copyToClipboard("Email", pass.email),
+                onPressed: () async {
+                  if(await BiometricPassed()) {
+                      _copyToClipboard("Email", pass.email);
+                    }
+                  }
               ),
             ),
 
@@ -121,11 +130,25 @@ class _PasswordInfoScreenState extends State<PasswordInfoScreen> {
                 children: [
                   IconButton(
                     icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
-                    onPressed: _togglePasswordVisibility,
+                    onPressed: ()async {
+                     if(_obscurePassword) {
+                          if (await BiometricPassed()) {
+                            _togglePasswordVisibility();
+                          }
+                        }else{
+                       setState((){
+                         _togglePasswordVisibility();
+                       });
+                     }
+                      }
                   ),
                   IconButton(
                     icon: Icon(Icons.copy),
-                    onPressed: () => _copyToClipboard("Password", pass.password),
+                    onPressed: () async {
+                     if(await BiometricPassed()) {
+                          _copyToClipboard("Password", pass.password);
+                        }
+                      }
                   ),
                 ],
               ),

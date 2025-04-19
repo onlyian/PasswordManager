@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:local_auth/local_auth.dart';
 import '../../controllers/switch_controller.dart';
 
+
 final switchController = Get.put(SwitchController());
+
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -43,10 +46,49 @@ class Settings extends StatelessWidget {
                      onChanged: (value) => switchController.toggleSwitch2(value),
                    )),
                  ),
+                 SizedBox(height: 30,),
+                 ElevatedButton.icon(onPressed: ()async {
 
+                    if (await BiometricPassed()) {
+                      Get.snackbar('Success', 'Welcome back');
+                    }
+                              },
+                      label: Text("TOGGLE BIOMETRIC"),
+                        icon: Icon(Icons.fingerprint),),
                ],
              ),
 
     );
+  }
+}
+
+Future<bool> BiometricPassed() async {
+  if (!switchController.isSwitched.value) return true;
+
+  final auth = LocalAuthentication();
+  bool canCheckBiometrics = await auth.canCheckBiometrics;
+  if (!canCheckBiometrics) {
+    Get.snackbar('Error', 'Biometric not available');
+    return false;
+  }
+
+  try {
+    final isAuthenticated = await auth.authenticate(
+      localizedReason: 'Please authenticate',
+      options: const AuthenticationOptions(
+        stickyAuth: true,
+        biometricOnly: true,
+      ),
+    );
+
+    if (!isAuthenticated) {
+      Get.snackbar('Cancelled', 'Authentication was cancelled');
+    }
+
+    return isAuthenticated;
+  }
+  catch (e) {
+    Get.snackbar('Error', 'Biometric failed: $e');
+    return false;
   }
 }

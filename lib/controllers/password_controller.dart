@@ -8,8 +8,10 @@ import '../utils/urlFetcher.dart';
 
 class PasswordController extends GetxController {
   var passwords = <PasswordModel>[].obs;
+  var isLoading = true.obs;
 
   Future<void> fetchPasswords() async {
+    isLoading.value = true;
     String baseUrl = store.read("baseUrl") ?? await fetchApiUrl();
     Uri url = Uri.parse("$baseUrl/password-manager/password_read.php");
 
@@ -17,6 +19,7 @@ class PasswordController extends GetxController {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         passwords.value = PasswordModel.fromJsonList(response.body);
+        isLoading.value = false;
       } else {
         print('Failed to load passwords');
       }

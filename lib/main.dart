@@ -11,7 +11,7 @@ void main() async {
 
     // home: Login()
     getPages: routes,
-    initialRoute: "/home",
+    initialRoute: "/login",
     debugShowCheckedModeBanner: false,
   ));
 }

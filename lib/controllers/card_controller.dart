@@ -8,9 +8,11 @@ final store = GetStorage();
 
 class CardController extends GetxController {
   var cards = <CardModel>[].obs;
+  var isLoading = true.obs;
 
 
   Future<void> fetchCards() async {
+    isLoading.value = true;
     String baseUrl = store.read("baseUrl") ?? await fetchApiUrl();
     Uri url = Uri.parse("$baseUrl/password-manager/card_read.php");
 
@@ -18,6 +20,7 @@ class CardController extends GetxController {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         cards.value = CardModel.fromJsonList(response.body);
+        isLoading.value = false;
       } else {
         print('Failed to load cards');
       }

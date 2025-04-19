@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:login_screen/utils/deleteAddress.dart';
 import 'package:login_screen/utils/deletePass.dart';
 import 'package:login_screen/views/screens/HomeScreen.dart';
@@ -18,6 +19,8 @@ import 'DataViews/InfoScreenC.dart';
 import 'DataViews/InfoScreenP.dart';
 
 
+
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -31,7 +34,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final AddressController addressController = Get.put(AddressController());
   final CardController cardController = Get.put(CardController());
 
-  @override
+
   @override
   void initState() {
     super.initState();
@@ -60,7 +63,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Color _getIndicatorColor() {
-    switch (tabController.selectedTabIndex.value) {
+    int tabIndex = tabController.selectedTabIndex.value;
+    switch (tabIndex) {
       case 0:
         return darkBlue;
       case 1:
@@ -74,6 +78,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final login = GetStorage();
+    final dynamic username = login.read("username") ?? " ";
     const String assetName = 'assets/images/shield.svg';
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -116,13 +122,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     ),
                                   ),
                                 ),
-                                const Padding(
+                                 Padding(
                                   padding: EdgeInsets.fromLTRB(8.0, 0, 8, 0),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Hello",
+                                        "Hello $username",
                                         style: TextStyle(
                                           color: Color.fromARGB(255, 22, 22, 22),
                                           fontSize: 17,
@@ -130,7 +136,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         ),
                                       ),
                                       Text(
-                                        "Welcome back!",
+                                        "Welcome back !",
                                         style: TextStyle(
                                           color: Color.fromARGB(255, 39, 39, 39),
                                           fontSize: 17,
@@ -145,7 +151,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             IconButton(
                               icon: SvgPicture.asset(assetName,
                                   height: screenHeight * 0.035),
-                              onPressed: () => Get.offAndToNamed("/login"),
+                              onPressed: () {
+                                Get.offAndToNamed("/login");
+                                Get.snackbar("Logout", "Logged out successfully",colorText: Colors.white);
+                              }
                             ),
                           ],
                         ),
@@ -236,6 +245,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   Widget CategoryViewP(String label) {
     double screenHeight = MediaQuery.of(context).size.height;
+    if (passwordController.isLoading.value) {
+      return Center(child: CircularProgressIndicator());
+    }
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
       child: Column(
@@ -335,6 +347,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
   Widget CategoryViewA(String label) {
     double screenHeight = MediaQuery.of(context).size.height;
+    if (addressController.isLoading.value) {
+      return Center(child: CircularProgressIndicator());
+    }
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
       child: Column(
@@ -434,6 +449,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
   Widget CategoryViewC(String label) {
     double screenHeight = MediaQuery.of(context).size.height;
+    if (cardController.isLoading.value) {
+      return Center(child: CircularProgressIndicator());
+    }
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
       child: Column(

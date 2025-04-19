@@ -11,7 +11,7 @@ import '../widgets/addPassSheet.dart';
 
 
 
-final TabChangeController tabController = Get.put(TabChangeController());
+final TabChangeController tabController = Get.put(TabChangeController(),permanent: true);
 final HomeScreenController homeScreenController = Get.put(HomeScreenController());
 final List<Widget> myScreens=[const Home(), const Settings()];
 
