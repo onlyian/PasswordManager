@@ -1,62 +1,24 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class passwords {
-  final String websiteName;
+class PasswordModel {
+  final String website;
+  final String username;
   final String email;
-  final String logoUrl;
+  final String password;
 
-  passwords(
-    this.websiteName,
-    this.email,
-    this.logoUrl,
-  );
+  PasswordModel(this.website, this.username, this.email, this.password);
 
-  passwords copyWith({
-    String? websiteName,
-    String? email,
-    String? logoUrl,
-  }) {
-    return passwords(
-      websiteName ?? this.websiteName,
-      email ?? this.email,
-      logoUrl ?? this.logoUrl,
+  factory PasswordModel.fromMap(Map<String, dynamic> map) {
+    return PasswordModel(
+      map['website'],
+      map['username'],
+      map['email'],
+      map['password'],
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'websiteName': websiteName,
-      'email': email,
-      'logoUrl': logoUrl,
-    };
+  static List<PasswordModel> fromJsonList(String source) {
+    final List<dynamic> decoded = json.decode(source);
+    return decoded.map((item) => PasswordModel.fromMap(item)).toList();
   }
-
-  factory passwords.fromMap(Map<String, dynamic> map) {
-    return passwords(
-      map['websiteName'] as String,
-      map['email'] as String,
-      map['logoUrl'] as String,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory passwords.fromJson(String source) => passwords.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() => 'passwords(websiteName: $websiteName, email: $email, logoUrl: $logoUrl)';
-
-  @override
-  bool operator ==(covariant passwords other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.websiteName == websiteName &&
-      other.email == email &&
-      other.logoUrl == logoUrl;
-  }
-
-  @override
-  int get hashCode => websiteName.hashCode ^ email.hashCode ^ logoUrl.hashCode;
 }

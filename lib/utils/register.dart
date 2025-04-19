@@ -11,7 +11,7 @@ Future<bool> registerUser(String username, String email, String password) async 
   String apiUrl = await fetchApiUrl();
   await store2.write("baseUrl", apiUrl);
 
-  var baseUrl = store2.read("baseUrl") ?? "https://default.ngrok-free.app";
+  var baseUrl = store2.read("baseUrl") ?? "https://localhost";
 
   var response = await http.post(
     Uri.parse("$baseUrl/password-manager/register.php"),

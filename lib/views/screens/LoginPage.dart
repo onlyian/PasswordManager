@@ -128,7 +128,7 @@ class Login extends StatelessWidget {
                 String apiUrl = await fetchApiUrl();
                 await store.write("baseUrl", apiUrl);
 
-                var baseUrl = store.read("baseUrl") ?? "https://default.ngrok-free.app";
+                var baseUrl = store.read("baseUrl") ?? "https://localhost";
 
                 var response = await http.post(
                     Uri.parse //will change everytime we restart ngrok(ngrok http 80)

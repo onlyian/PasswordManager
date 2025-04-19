@@ -11,6 +11,6 @@ Future<String> fetchApiUrl() async {
     return jsonData["api_url"];
   } catch (e) {
     print("Error fetching API URL: $e");
-    return "https://default.ngrok-free.app"; // fallback
+    return "https://localhost"; // fallback
   }
 }

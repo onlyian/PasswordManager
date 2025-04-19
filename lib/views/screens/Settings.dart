@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
 import '../../controllers/switch_controller.dart';
 
 final switchController = Get.put(SwitchController());
@@ -39,12 +38,6 @@ class Settings extends StatelessWidget {
                      onChanged: (value) => switchController.toggleSwitch(value),
                    )),
                  ),
-                 // ListTile(
-                 //   leading: Icon(Icons.location_on_rounded),
-                 //   trailing: Icon(Icons.location_on_rounded),
-                 //   title: Icon(Icons.brush_rounded),
-                 //   subtitle: Icon(Icons.brush_rounded),
-                 // ),
                  ListTile(
                    leading: Icon(Icons.brush_rounded),
                    title: Text("Theme",style: TextStyle(fontWeight: FontWeight.w500),),

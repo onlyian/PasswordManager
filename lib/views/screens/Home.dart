@@ -3,10 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../../configs/ConstantC.dart';
-import '../../configs/constants.dart';
+import 'package:login_screen/views/screens/HomeScreen.dart';
 import '../../configs/mycolors.dart';
+import '../../controllers/TabChange_controller.dart';
+import '../../controllers/address_controller.dart';
+import '../../controllers/card_controller.dart';
+import '../../controllers/password_controller.dart';
 import '../widgets/CategoryCard.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,20 +21,31 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedIndex = 0;
+  final PasswordController passwordController = Get.put(PasswordController());
+  final AddressController addressController = Get.put(AddressController());
+  final CardController cardController = Get.put(CardController());
 
+  @override
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync:  this);
+    _tabController = TabController(length: 3, vsync: this);
+    passwordController.fetchPasswords();
+    addressController.fetchAddresses();
+    cardController.fetchCards();
+
+    final TabChangeController tabController = Get.find<TabChangeController>();
+
     _tabController.addListener(() {
-      if (_tabController.indexIsChanging == false) {
-        setState(() {
-          _selectedIndex = _tabController.index;
-        });
+      if (!_tabController.indexIsChanging) {
+        tabController.updateTabIndex(_tabController.index);
+
+        print("Tab Changed To: ${_tabController.index}");
       }
     });
+
   }
+
 
   @override
   void dispose() {
@@ -39,7 +54,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Color _getIndicatorColor() {
-    switch (_selectedIndex) {
+    switch (tabController.selectedTabIndex.value) {
       case 0:
         return darkBlue;
       case 1:
@@ -57,192 +72,206 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 20, 20.0, 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // profile row
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 28,
-                          backgroundColor: const Color.fromARGB(255, 213, 213, 213),
-                          child: CircleAvatar(
-                            radius: 26.5,
-                            backgroundColor: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: CircleAvatar(
-                                backgroundImage: const AssetImage("assets/images/img_1.png"),
-                                radius: 25,
+
+      return Obx(() =>DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Column(
+              children: [
+                // Header
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 5, 15.0, 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // profile row
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 28,
+                            backgroundColor: const Color.fromARGB(
+                                255, 213, 213, 213),
+                            child: CircleAvatar(
+                              radius: 26.5,
+                              backgroundColor: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: CircleAvatar(
+                                  backgroundImage: const AssetImage(
+                                      "assets/images/img_1.png"),
+                                  radius: 25,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(8.0, 0, 8, 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Hello",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 22, 22, 22),
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w600,
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(8.0, 0, 8, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Hello",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 22, 22, 22),
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  "Welcome back!",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 39, 39, 39),
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      IconButton(
+                        icon: SvgPicture.asset(assetName,
+                            height: screenHeight * 0.035),
+                        onPressed: () => Get.offAndToNamed("/login"),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Search Bar
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 5, 10.0, 5),
+                  child: SearchBar(
+                    backgroundColor: WidgetStateProperty.all(
+                        const Color.fromARGB(247, 232, 235, 237)),
+                    shape: WidgetStateProperty.all(
+                      RoundedRectangleBorder(borderRadius: BorderRadius
+                          .circular(20)),
+                    ),
+                    leading: const Padding(
+                      padding: EdgeInsets.fromLTRB(10.0, 2.0, 0, 0),
+                      child: Icon(Icons.search),
+                    ),
+                    hintText: "Search Password",
+                    textStyle: WidgetStateProperty.all(
+                      TextStyle(fontWeight: FontWeight.w500, color: Colors
+                          .grey[700]),
+                    ),
+                  ),
+                ),
+
+                // Category label
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(10.0, 10, 0, 0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Category",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight
+                          .bold),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 5),
+
+                // Category Tabs
+                TabBar(
+                  controller: _tabController,
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  indicatorPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  dividerColor: Colors.transparent,
+                  indicatorColor: _getIndicatorColor(),
+                  tabs: [
+                    Tab(
+                      height: 135,
+                      child:
+                      CategoryCard(
+                        color: lightBlue,
+                        iconBg: darkBlue,
+                        icon: "assets/images/codesandbox.svg",
+                        screenWidth: screenWidth,
+                        screenHeight: screenHeight,
+                      ),
+                    ),
+                    Tab(
+                      height: 135,
+                      child:
+                      CategoryCard(
+                        color: lightGreen,
+                        iconBg: darkGreen,
+                        icon: "assets/images/compass.svg",
+                        screenWidth: screenWidth,
+                        screenHeight: screenHeight,
+                      ),
+                    ),
+                    Tab(
+                      height: 135,
+                      child:
+                      CategoryCard(
+                        color: lightRed,
+                        iconBg: darkRed,
+                        icon: "assets/images/credit-card.svg",
+                        screenWidth: screenWidth,
+                        screenHeight: screenHeight,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 5),
+
+                // Expanded TabBarView
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      CategoryViewP("Passwords"),
+                      CategoryViewA("Addresses"),
+                      // CategoryViewC("Cards"),
+
+                      ListView.builder(
+                        itemCount: cardController.cards.length,
+                        itemBuilder: (context, index) {
+                          final card = cardController.cards[index];
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/images/bg.png'),
+                                  fit: BoxFit.cover,
+                                ),borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  children: [
+                                    CardRow('Name', card.name),
+                                    CardRow('Card Number', card.cardNumber),
+                                    CardRow('Provider', card.brand),
+                                    CardRow('Expiry Year', card.expiryYear),
+                                  ],
                                 ),
                               ),
-                              Text(
-                                "Welcome back!",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 39, 39, 39),
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    IconButton(
-                      icon: SvgPicture.asset(assetName, height: screenHeight * 0.035),
-                      onPressed: () => Get.offAndToNamed("/login"),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Search Bar
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 5, 10.0, 5),
-                child: SearchBar(
-                  backgroundColor: WidgetStateProperty.all(const Color.fromARGB(247, 232, 235, 237)),
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  ),
-                  leading: const Padding(
-                    padding: EdgeInsets.fromLTRB(10.0, 2.0, 0, 0),
-                    child: Icon(Icons.search),
-                  ),
-                  hintText: "Search Password",
-                  textStyle: WidgetStateProperty.all(
-                    TextStyle(fontWeight: FontWeight.w500, color: Colors.grey[700]),
-                  ),
-                ),
-              ),
-
-              // Category label
-              const Padding(
-                padding: EdgeInsets.fromLTRB(10.0, 10, 0, 0),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Category",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              // Category Tabs
-
-                      TabBar(
-                        // isScrollable: true,
-                        controller: _tabController,
-                        overlayColor: WidgetStateProperty.all(Colors.transparent),
-                        indicatorPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-                        dividerColor: Colors.transparent,
-                    indicatorColor: _getIndicatorColor(),
-                      tabs:[
-                        Tab(
-                          height: 135,
-                          child:
-                          CategoryCard(
-                          color: lightBlue,
-                          iconBg: darkBlue,
-                          icon: "assets/images/codesandbox.svg",
-                          screenWidth: screenWidth,
-                          screenHeight: screenHeight,
-                        ),
-                        ),
-                        Tab(
-                          height: 135,
-                          child:
-                        CategoryCard(
-                          color: lightGreen,
-                          iconBg: darkGreen,
-                          icon: "assets/images/compass.svg",
-                          screenWidth: screenWidth,
-                          screenHeight: screenHeight,
-                        ),
-                        ),
-                        Tab(
-                              height: 135,
-                          child:
-                        CategoryCard(
-                          color: lightRed,
-                          iconBg: darkRed,
-                          icon: "assets/images/credit-card.svg",
-                          screenWidth: screenWidth,
-                          screenHeight: screenHeight,
-                        ),
-                        ),
-                      ],
-                    ),
-
-              const SizedBox(height: 10),
-
-              // Expanded TabBarView
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    buildCategoryList("Passwords"),
-                    buildCategoryList("Addresses"),
-                    // buildCategoryList("Cards"),
-                     ListView.builder(
-                  itemCount: HomeScreenController.cards.length,
-                  itemBuilder: (context, index) {
-                    final card = HomeScreenController.cards[index];
-                    return Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            buildCopyRow('Name', card.title),
-                            buildCopyRow('Card Number', card.number),
-                            buildCopyRow('Provider', card.provider),
-                            buildCopyRow('Expiry Date', card.expiry),
-                          ],
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
-
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget buildCopyRow(String label, String value) {
+      ));
+    }
+  Widget CardRow(String label, dynamic value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
@@ -251,8 +280,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(value, style: TextStyle(fontSize: 16)),
+                Text(label, style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+                Text("$value", style: TextStyle(fontSize: 16,)),
               ],
             ),
           ),
@@ -271,7 +300,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
 
-  Widget buildCategoryList(String label) {
+  Widget CategoryViewP(String label) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 10, 10.0, 0),
@@ -291,57 +320,205 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: _getIndicatorColor()),),
               child: ListView.builder(
-                itemCount: Constants.passwordData.length,
+                itemCount: passwordController.passwords.length,
                 itemBuilder: (context, index) {
-                  final password = Constants.passwordData[index];
+                  final pass = passwordController.passwords[index];
                   return ListTile(
 
                     leading: Container(
-                                  height: 55,
-                                  width: 55,
-                                  decoration: BoxDecoration(
-                                    color: logoBackground,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: FractionallySizedBox(
-                                    heightFactor: 0.5,
-                                    widthFactor: 0.5,
-                                    child: Image.network(password.logoUrl),
-                                  ),
-                                ),
+                      height: 55,
+                      width: 55,
+                      decoration: BoxDecoration(
+                        color: logoBackground,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: FractionallySizedBox(
+                        heightFactor: 0.5,
+                        widthFactor: 0.5,
+                        child: Icon(Icons.lock),
+                      ),
+                    ),
                     title: Text(
-                                    password.websiteName,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
+                      pass.website,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     subtitle:  Text(
-                                    password.email,
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 39, 39, 39),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
+                      pass.email,
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 39, 39, 39),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                     trailing: IconButton(
-                          onPressed: () {},
-                          icon: Image.asset(
-                            "assets/images/extras.png",
-                            height: screenHeight * 0.020,
-                          ),
-                        ),
+                      onPressed: () {},
+                      icon: Image.asset(
+                        "assets/images/extras.png",
+                        height: screenHeight * 0.020,
+                      ),
+                    ),
 
                   );
                 },
               ),
             ),
           ),
-         const SizedBox(height: 5,)
+          const SizedBox(height: 5,)
         ],
       ),
     );
   }
+  Widget CategoryViewA(String label) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10.0, 10, 10.0, 0),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: _getIndicatorColor()),),
+              child: ListView.builder(
+                itemCount: addressController.addresses.length,
+                itemBuilder: (context, index) {
+                  final address = addressController.addresses[index];
+                  return ListTile(
 
-}
+                    leading: Container(
+                      height: 55,
+                      width: 55,
+                      decoration: BoxDecoration(
+                        color: logoBackground,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: FractionallySizedBox(
+                        heightFactor: 0.5,
+                        widthFactor: 0.5,
+                        child: Icon(Icons.location_on_rounded),
+                      ),
+                    ),
+                    title: Text(
+                      address.region,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle:  Text(
+                      address.city,
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 39, 39, 39),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: Image.asset(
+                        "assets/images/extras.png",
+                        height: screenHeight * 0.020,
+                      ),
+                    ),
+
+                  );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 5,)
+        ],
+      ),
+    );
+  }
+  Widget CategoryViewC(String label) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10.0, 10, 10.0, 0),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: _getIndicatorColor()),),
+              child: ListView.builder(
+                itemCount: cardController.cards.length,
+                itemBuilder: (context, index) {
+                  final card = cardController.cards[index];
+                  return ListTile(
+
+                    leading: Container(
+                      height: 55,
+                      width: 55,
+                      decoration: BoxDecoration(
+                        color: logoBackground,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: FractionallySizedBox(
+                        heightFactor: 0.5,
+                        widthFactor: 0.5,
+                        child: Icon(Icons.credit_card_rounded),
+                      ),
+                    ),
+                    title: Text(
+                      card.name,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle:  Text(
+                      card.brand,
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 39, 39, 39),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: Image.asset(
+                        "assets/images/extras.png",
+                        height: screenHeight * 0.020,
+                      ),
+                    ),
+
+                  );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 5,)
+        ],
+      ),
+    );
+  }
+  }
+
+
+
+
+

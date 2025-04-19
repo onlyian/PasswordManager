@@ -4,19 +4,39 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:login_screen/controllers/homescreen_controller.dart';
 import 'package:login_screen/views/screens/Home.dart';
 import 'package:login_screen/views/screens/Settings.dart';
-
+import '../../controllers/TabChange_controller.dart';
+import '../widgets/addAddressSheet.dart';
+import '../widgets/addCardSheet.dart';
 import '../widgets/addPassSheet.dart';
-import '../../utils/savePass.dart';
 
 
 
+final TabChangeController tabController = Get.put(TabChangeController());
 final HomeScreenController homeScreenController = Get.put(HomeScreenController());
 final List<Widget> myScreens=[const Home(), const Settings()];
 
+//password controllers
 final TextEditingController websiteController = TextEditingController();
 final TextEditingController usernameController = TextEditingController();
 final TextEditingController emailController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
+//address controllers
+final TextEditingController nameController = TextEditingController();
+final TextEditingController orgController = TextEditingController();
+final TextEditingController phoneController = TextEditingController();
+final TextEditingController regionController = TextEditingController();
+final TextEditingController streetController = TextEditingController();
+final TextEditingController cityController = TextEditingController();
+final TextEditingController postalController = TextEditingController();
+// Card controllers
+final TextEditingController cardNameController = TextEditingController();
+final TextEditingController cardholderController = TextEditingController();
+final TextEditingController cardNumberController = TextEditingController();
+final TextEditingController brandController = TextEditingController();
+final TextEditingController expiryMonthController = TextEditingController();
+final TextEditingController expiryYearController = TextEditingController();
+final TextEditingController cvvController = TextEditingController();
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -62,11 +82,56 @@ class HomeScreen extends StatelessWidget {
       ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showPasswordBottomSheet(context, websiteController, usernameController, emailController, passwordController),
-        backgroundColor:  Colors.grey[700],
-        child: Icon(Icons.add, color: Color(0xFF212121),),
-      ),
+
+      floatingActionButton: Obx(() {
+        final int tabIndex = tabController.selectedTabIndex.value;
+        if(homeScreenController.selectedScreenIndex.value == 0){
+        return FloatingActionButton(
+          onPressed: () {
+            if (tabIndex == 0) {
+              // Show custom password bottom sheet
+              showPasswordBottomSheet(
+                context,
+                websiteController,
+                usernameController,
+                emailController,
+                passwordController,
+              );
+            }
+            else if (tabIndex == 1) {
+              showAddressBottomSheet(
+                context,
+                nameController,
+                orgController,
+                phoneController,
+                regionController,
+                streetController,
+                cityController,
+                postalController,
+              );
+            }else {
+            showCardBottomSheet(
+            context,
+            cardNameController,
+            cardholderController,
+            cardNumberController,
+            brandController,
+            expiryMonthController,
+            expiryYearController,
+            cvvController,
+            );
+            }
+          },
+          backgroundColor: Colors.cyan[200],
+          child: Icon(Icons.add, color: Colors.black54),
+        );
+        }
+        else {
+          // Don't show FAB on Settings
+          return const SizedBox.shrink();
+        }
+      }),
+
 
 body: Obx(() {
     int index = homeScreenController.selectedScreenIndex.value;
@@ -79,4 +144,3 @@ body: Obx(() {
     );
   }
 }
-
