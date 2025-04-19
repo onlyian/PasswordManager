@@ -141,28 +141,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   ),
                 ),
 
-                // Search Bar
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0, 5, 10.0, 5),
-                  child: SearchBar(
-                    backgroundColor: WidgetStateProperty.all(
-                        const Color.fromARGB(247, 232, 235, 237)),
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(borderRadius: BorderRadius
-                          .circular(20)),
-                    ),
-                    leading: const Padding(
-                      padding: EdgeInsets.fromLTRB(10.0, 2.0, 0, 0),
-                      child: Icon(Icons.search),
-                    ),
-                    hintText: "Search Password",
-                    textStyle: WidgetStateProperty.all(
-                      TextStyle(fontWeight: FontWeight.w500, color: Colors
-                          .grey[700]),
-                    ),
-                  ),
-                ),
-
                 // Category label
                 const Padding(
                   padding: EdgeInsets.fromLTRB(10.0, 10, 0, 0),
@@ -232,36 +210,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     children: [
                       CategoryViewP("Passwords"),
                       CategoryViewA("Addresses"),
-                      // CategoryViewC("Cards"),
-
-                      ListView.builder(
-                        itemCount: cardController.cards.length,
-                        itemBuilder: (context, index) {
-                          final card = cardController.cards[index];
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/bg.png'),
-                                  fit: BoxFit.cover,
-                                ),borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Column(
-                                  children: [
-                                    CardRow('Name', card.name),
-                                    CardRow('Card Number', card.cardNumber),
-                                    CardRow('Provider', card.brand),
-                                    CardRow('Expiry Year', card.expiryYear),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                      CategoryViewC("Cards"),
                     ],
                   ),
                 ),
@@ -271,34 +220,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
       ));
     }
-  Widget CardRow(String label, dynamic value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
-                Text("$value", style: TextStyle(fontSize: 16,)),
-              ],
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.copy),
-            onPressed: () {
-              Clipboard.setData(ClipboardData(text: value));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('$label copied')),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
 
   Widget CategoryViewP(String label) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -355,7 +276,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       ),
                     ),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.toNamed("info");
+                      },
                       icon: Image.asset(
                         "assets/images/extras.png",
                         height: screenHeight * 0.020,
@@ -427,7 +350,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       ),
                     ),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () { Get.toNamed("info");},
                       icon: Image.asset(
                         "assets/images/extras.png",
                         height: screenHeight * 0.020,
@@ -499,7 +422,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       ),
                     ),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () { Get.toNamed("info");},
                       icon: Image.asset(
                         "assets/images/extras.png",
                         height: screenHeight * 0.020,

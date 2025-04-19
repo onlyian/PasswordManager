@@ -15,14 +15,10 @@ class Settings extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(onPressed: (){},
-            icon: Icon(Icons.arrow_back_rounded)),
-
         title: Text('Settings',
           style: TextStyle(fontFamily: 'Anurati'),
         ),
         backgroundColor: Colors.transparent,
-        centerTitle: true,
         elevation: 0,
       ),
 
