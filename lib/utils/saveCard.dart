@@ -10,8 +10,8 @@ Future<bool> insertCard(
     String cardholder,
     String cardnumber,
     String brand,
-    int expirymonth,
-    int expiryyear,
+    String expirymonth,
+    String expiryyear,
     String cvv,
     ) async {
   String apiUrl = await fetchApiUrl();

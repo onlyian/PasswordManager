@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import '../../controllers/card_controller.dart';
 import '../../utils/saveCard.dart';
 import 'MyTextField.dart';
+
+final CardController cardControllerF = Get.find<CardController>();
 
 void showCardBottomSheet(
     BuildContext context,
@@ -84,11 +89,11 @@ void showCardBottomSheet(
                           final cardholder = cardholderController.text.trim();
                           final cardnumber = cardNumberController.text.trim();
                           final brand = brandController.text.trim();
-                          final expirymonth = int.tryParse(expiryMonthController.text.trim()) ?? 0;
-                          final expiryyear = int.tryParse(expiryYearController.text.trim()) ?? 0;
+                          final expirymonth = expiryMonthController.text.trim();
+                          final expiryyear = expiryYearController.text.trim();
                           final cvv = cvvController.text.trim();
 
-                          if (cardname.isEmpty || cardholder.isEmpty || cardnumber.isEmpty || brand.isEmpty || expirymonth == 0 || expiryyear == 0 || cvv.isEmpty) {
+                          if (cardname.isEmpty || cardholder.isEmpty || cardnumber.isEmpty || brand.isEmpty || expirymonth.isEmpty  || expiryyear.isEmpty  || cvv.isEmpty ) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text("Please fill all required fields.")),
                             );
@@ -100,8 +105,9 @@ void showCardBottomSheet(
                           if (context.mounted) {
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(saved ? "Card saved successfully!" : "Failed to save card. Try again.")),
+                              SnackBar(content: Text(saved ?  "Card saved successfully!" : "Failed to save card. Try again.")),
                             );
+                            cardControllerF.fetchCards();
                             cardNameController.clear();
                             cardholderController.clear();
                             cardNumberController.clear();

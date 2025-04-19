@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import '../../controllers/address_controller.dart';
 import '../../utils/saveAddress.dart';
 import 'MyTextField.dart';
+
+final AddressController addressControllerF = Get.find<AddressController>();
 
 void showAddressBottomSheet(
     BuildContext context,
@@ -103,6 +108,7 @@ void showAddressBottomSheet(
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(saved ? "Address saved successfully!" : "Failed to save address. Try again.")),
                               );
+                                  addressControllerF.fetchAddresses();
                                   nameController.clear();
                                   orgController.clear();
                                   phoneController.clear();

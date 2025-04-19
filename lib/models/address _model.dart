@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class AddressModel {
+  final int id;
   final dynamic name;
   final dynamic organization;
   final dynamic phone;
@@ -10,6 +11,7 @@ class AddressModel {
   final String postalCode;
 
   AddressModel({
+    required this.id,
     required this.name,
     required this.organization,
     required this.phone,
@@ -21,6 +23,7 @@ class AddressModel {
 
   factory AddressModel.fromMap(Map<String, dynamic> map) {
     return AddressModel(
+      id: int.parse(map['id'].toString()),
       name: map['name'],
       organization: map['organization'],
       phone: map['phone'],

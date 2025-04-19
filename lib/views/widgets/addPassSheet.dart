@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:login_screen/controllers/password_controller.dart';
 import '../../utils/savePass.dart';
 import 'MyTextField.dart';
+
+final PasswordController passwordControllerF = Get.find<PasswordController>();
 
 void showPasswordBottomSheet(
     BuildContext context,
@@ -93,6 +98,7 @@ void showPasswordBottomSheet(
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(saved ? "Save successful!" : "Save failed. Try again.")),
                             );
+                            passwordControllerF.fetchPasswords();
                             websiteController.clear();
                             usernameController.clear();
                             emailController.clear();

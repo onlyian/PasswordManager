@@ -9,6 +9,7 @@ final store = GetStorage();
 class CardController extends GetxController {
   var cards = <CardModel>[].obs;
 
+
   Future<void> fetchCards() async {
     String baseUrl = store.read("baseUrl") ?? await fetchApiUrl();
     Uri url = Uri.parse("$baseUrl/password-manager/card_read.php");

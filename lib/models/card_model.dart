@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 class CardModel {
+  final int id;
   final String name;
   final String cardholderName;
   final String cardNumber;
   final String brand;
-  final int expiryMonth;
-  final int expiryYear;
-  final String cvv;
+  final dynamic expiryMonth;
+  final dynamic expiryYear;
+  final dynamic cvv;
 
   CardModel({
+    required this.id,
     required this.name,
     required this.cardholderName,
     required this.cardNumber,
@@ -21,12 +23,13 @@ class CardModel {
 
   factory CardModel.fromMap(Map<String, dynamic> map) {
     return CardModel(
+      id: int.parse(map['id'].toString()),
       name: map['name'],
       cardholderName: map['cardholder_name'],
       cardNumber: map['card_number'],
       brand: map['brand'],
-      expiryMonth: int.parse(map['expiry_month']),
-      expiryYear: int.parse(map['expiry_year']),
+      expiryMonth: map['expiry_month'],
+      expiryYear: map['expiry_year'],
       cvv: map['cvv'],
     );
   }

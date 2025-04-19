@@ -3,12 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:login_screen/utils/deleteAddress.dart';
+import 'package:login_screen/utils/deletePass.dart';
 import 'package:login_screen/views/screens/HomeScreen.dart';
 import '../../configs/mycolors.dart';
 import '../../controllers/TabChange_controller.dart';
 import '../../controllers/address_controller.dart';
 import '../../controllers/card_controller.dart';
 import '../../controllers/password_controller.dart';
+import '../../utils/deleteCard.dart';
 import '../widgets/CategoryCard.dart';
 
 
@@ -34,7 +37,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     addressController.fetchAddresses();
     cardController.fetchCards();
 
-    final TabChangeController tabController = Get.find<TabChangeController>();
+  final TabChangeController tabController = Get.find<TabChangeController>();
 
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
@@ -245,6 +248,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 itemBuilder: (context, index) {
                   final pass = passwordController.passwords[index];
                   return ListTile(
+                    onLongPress:  ()async {
+                      final confirmed = await showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("Delete Password?"),
+                          content: Text("Are you sure you want to delete this password?"),
+                          actions: [
+                            TextButton(onPressed: () => Navigator.pop(context, false), child: Text("Cancel")),
+                            TextButton(onPressed: () => Navigator.pop(context, true), child: Text("Delete")),
+                          ],
+                        ),
+                      );
+
+                      if (confirmed == true) {
+                        final success = await deletePass(pass.id); // Replace with your actual model
+                        if (success) {
+                          passwordController.fetchPasswords(); // Refresh the list
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password deleted.")));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete Password.")));
+                        }
+                      }
+                    },
 
                     leading: Container(
                       height: 55,
@@ -319,6 +345,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 itemBuilder: (context, index) {
                   final address = addressController.addresses[index];
                   return ListTile(
+                    onLongPress:  ()async {
+                      final confirmed = await showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("Delete Address?"),
+                          content: Text("Are you sure you want to delete this address?"),
+                          actions: [
+                            TextButton(onPressed: () => Navigator.pop(context, false), child: Text("Cancel")),
+                            TextButton(onPressed: () => Navigator.pop(context, true), child: Text("Delete")),
+                          ],
+                        ),
+                      );
+
+                      if (confirmed == true) {
+                        final success = await deleteAddress(address.id); // Replace with your actual model
+                        if (success) {
+                          addressController.fetchAddresses(); // Refresh the list
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Address deleted.")));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete address.")));
+                        }
+                      }
+                    },
 
                     leading: Container(
                       height: 55,
@@ -391,6 +440,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 itemBuilder: (context, index) {
                   final card = cardController.cards[index];
                   return ListTile(
+                    onLongPress:  ()async {
+                      final confirmed = await showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                        title: Text("Delete Card?"),
+                        content: Text("Are you sure you want to delete this card?"),
+                        actions: [
+                      TextButton(onPressed: () => Navigator.pop(context, false), child: Text("Cancel")),
+                      TextButton(onPressed: () => Navigator.pop(context, true), child: Text("Delete")),
+                      ],
+                      ),
+                      );
+
+                      if (confirmed == true) {
+                      final success = await deleteCard(card.id); // Replace with your actual model
+                      if (success) {
+                      cardController.fetchCards(); // Refresh the list
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Card deleted.")));
+                      } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete card.")));
+                      }
+                      }
+                      },
 
                     leading: Container(
                       height: 55,
