@@ -245,9 +245,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   Widget CategoryViewP(String label) {
     double screenHeight = MediaQuery.of(context).size.height;
-    // if (passwordController.isLoading.value) {
-    //   return Center(child: CircularProgressIndicator());
-    // }
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
       child: Column(
@@ -268,74 +265,74 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 itemCount: passwordController.passwords.length,
                 itemBuilder: (context, index) {
                   final pass = passwordController.passwords[index];
-                  return Padding(
+                  return  Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: ListTile(
-                      tileColor: Colors.blueGrey[100],
-                      shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(20),),
-                      splashColor: Colors.cyan,
-                      onLongPress:  ()async {
-                        final confirmed = await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text("Delete Password?"),
-                            content: Text("Are you sure you want to delete this password?"),
-                            actions: [
-                              TextButton(onPressed: () => Navigator.pop(context, false), child: Text("Cancel")),
-                              TextButton(onPressed: () => Navigator.pop(context, true), child: Text("Delete")),
-                            ],
+                   child:  ListTile(
+                          tileColor: Colors.cyan[100],
+                          shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(20),),
+                          splashColor: Colors.cyan,
+                          onLongPress:  ()async {
+                            final confirmed = await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text("Delete Password?"),
+                                content: Text("Are you sure you want to delete this password?"),
+                                actions: [
+                                  TextButton(onPressed: () => Navigator.pop(context, false), child: Text("Cancel")),
+                                  TextButton(onPressed: () => Navigator.pop(context, true), child: Text("Delete")),
+                                ],
+                              ),
+                            );
+
+                            if (confirmed == true) {
+                              final success = await deletePass(pass.id); // Replace with your actual model
+                              if (success) {
+                                passwordController.fetchPasswords(); // Refresh the list
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password deleted.")));
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete Password.")));
+                              }
+                            }
+                          },
+
+                          leading: Container(
+                            height: 55,
+                            width: 55,
+                            decoration: BoxDecoration(
+                              color: logoBackground,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: FractionallySizedBox(
+                              heightFactor: 0.5,
+                              widthFactor: 0.5,
+                              child: Icon(Icons.lock),
+                            ),
                           ),
-                        );
+                          title: Text(
+                            pass.website,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle:  Text(
+                            pass.email,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 39, 39, 39),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            onPressed:() => Get.to(() => PasswordInfoScreen(password: pass)),
 
-                        if (confirmed == true) {
-                          final success = await deletePass(pass.id); // Replace with your actual model
-                          if (success) {
-                            passwordController.fetchPasswords(); // Refresh the list
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password deleted.")));
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete Password.")));
-                          }
-                        }
-                      },
-
-                      leading: Container(
-                        height: 55,
-                        width: 55,
-                        decoration: BoxDecoration(
-                          color: logoBackground,
-                          borderRadius: BorderRadius.circular(20),
+                            icon: Image.asset(
+                              "assets/images/extras.png",
+                              height: screenHeight * 0.020,
+                            ),
+                          ),
                         ),
-                        child: FractionallySizedBox(
-                          heightFactor: 0.5,
-                          widthFactor: 0.5,
-                          child: Icon(Icons.lock),
-                        ),
-                      ),
-                      title: Text(
-                        pass.website,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle:  Text(
-                        pass.email,
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 39, 39, 39),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      trailing: IconButton(
-                        onPressed:() => Get.to(() => PasswordInfoScreen(password: pass)),
-
-                        icon: Image.asset(
-                          "assets/images/extras.png",
-                          height: screenHeight * 0.020,
-                        ),
-                      ),
-                    ),
                   );
                 },
               ),
@@ -347,9 +344,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
   Widget CategoryViewA(String label) {
     double screenHeight = MediaQuery.of(context).size.height;
-    if (addressController.isLoading.value) {
-      return Center(child: CircularProgressIndicator());
-    }
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
       child: Column(
@@ -373,7 +367,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   return Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: ListTile(
-                      tileColor: Colors.blueGrey[100],
+                      tileColor: Colors.tealAccent[100],
                       shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(20),),
                       splashColor: Colors.cyan,
                       onLongPress:  ()async {
@@ -449,9 +443,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
   Widget CategoryViewC(String label) {
     double screenHeight = MediaQuery.of(context).size.height;
-    if (cardController.isLoading.value) {
-      return Center(child: CircularProgressIndicator());
-    }
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
       child: Column(
@@ -475,7 +466,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   return Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: ListTile(
-                      tileColor: Colors.blueGrey[100],
+                      tileColor: Colors.redAccent[100],
                       shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(20),),
                       splashColor: Colors.cyan,
                       onLongPress:  ()async {

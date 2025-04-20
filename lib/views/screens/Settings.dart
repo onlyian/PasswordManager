@@ -38,6 +38,10 @@ class Settings extends StatelessWidget {
                      subtitle: Padding( padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                          child:  Text("Use biometric authentication to access sensitive information")),
                      trailing: Obx(() => Switch(
+                       activeColor: Colors.cyan,
+                       activeTrackColor: Colors.black,
+                       inactiveThumbColor: Colors.black,
+                       inactiveTrackColor: Colors.cyanAccent[100],
                        value: switchController.isSwitched.value,
                        onChanged: (value) => switchController.toggleSwitch(value),
                      )),

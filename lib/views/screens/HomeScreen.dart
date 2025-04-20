@@ -51,42 +51,54 @@ class HomeScreen extends StatelessWidget {
         color: Colors.white,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.grey.shade400,
+            gradient: LinearGradient(
+              colors: [Colors.cyan, Colors.cyanAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.all(Radius.circular(20),)
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
-            child: GNav(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
-              backgroundColor: Colors.grey.shade400,
-              color: Colors.black,
-              activeColor: Colors.white,
-              tabBackgroundColor: Colors.black87,
-              gap: 8,
-              tabs:
-                [
-                  GButton(
-                    icon: Icons.vpn_key_outlined,
-                    text: "Vault",
-                  ),
-                  GButton(
-                    icon: Icons.settings,
-                    text: "Settings",
-                  ),
-                ],
-              selectedIndex: homeScreenController.selectedScreenIndex.value,
-              onTabChange: (index) =>homeScreenController.updateSelectedIndex(index),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GNav(
+                  haptic: true,
+                  padding: EdgeInsets.fromLTRB(50, 10, 50, 15),
+                  backgroundColor: Colors.transparent,
+                  color: Colors.black,
+                  activeColor: Colors.white,
+                  tabBackgroundColor: Colors.black87,
+                  gap: 10,
+                  tabs:
+                    [
+                      GButton(
+                        icon: Icons.vpn_key_outlined,
+                        text: "Vault",
+                        gap: 5,
+                      ),
+                      GButton(
+                        icon: Icons.settings,
+                        text: "Settings",
+                      ),
+                    ],
+                  selectedIndex: homeScreenController.selectedScreenIndex.value,
+                  onTabChange: (index) =>homeScreenController.updateSelectedIndex(index),
+                ),
+              ],
             ),
           ),
         ),
       ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
       floatingActionButton: Obx(() {
         final int tabIndex = tabController.selectedTabIndex.value;
         if(homeScreenController.selectedScreenIndex.value == 0){
         return FloatingActionButton(
+          shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(20),),
           onPressed: () {
             if (tabIndex == 0) {
               // Show custom password bottom sheet
@@ -122,7 +134,7 @@ class HomeScreen extends StatelessWidget {
             );
             }
           },
-          backgroundColor: Colors.cyan[200],
+          backgroundColor: Colors.cyanAccent,
           child: Icon(Icons.add, color: Colors.black54),
         );
         }

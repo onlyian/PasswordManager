@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:local_auth/local_auth.dart';
 import 'package:login_screen/controllers/TabChange_controller.dart';
 import '../../utils/urlFetcher.dart';
 
@@ -168,7 +169,37 @@ class Login extends StatelessWidget {
 
             SizedBox(height: 10),
             TextButton(
-              onPressed: () {Get.offAndToNamed("/home");},
+              onPressed: ()async {
+
+                Get.snackbar('To enter:', 'Login with Biometric');
+
+                final LocalAuthentication auth = LocalAuthentication();
+
+                bool canCheckBiometrics = await auth.canCheckBiometrics;
+                bool isAuthenticated = false;
+
+                if (canCheckBiometrics) {
+                  try {
+                    isAuthenticated = await auth.authenticate(
+                      localizedReason: 'Please authenticate to login',
+                      options: const AuthenticationOptions(
+                        stickyAuth: true,
+                        biometricOnly: true,
+                      ),
+                    );
+                  } catch (e) {
+                    Get.snackbar('Error', 'Biometric authentication failed: $e');
+                  }
+                } else {
+                  Get.snackbar('Unauthorized', 'Biometric authentication is not available');
+                }
+                    if (isAuthenticated){
+              Get.offAndToNamed("/home");
+              Get.snackbar('Success', 'Biometric authentication passed');
+              } else {
+                      Get.snackbar('Failed', 'Authentication failed');
+                    }
+                },
               child: Text(
                 'Forgot Password?',
                 style: TextStyle(color: Colors.blue),
