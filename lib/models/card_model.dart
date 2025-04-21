@@ -34,8 +34,7 @@ class CardModel {
     );
   }
 
-  static List<CardModel> fromJsonList(String source) {
-    final List<dynamic> decoded = json.decode(source);
-    return decoded.map((item) => CardModel.fromMap(item)).toList();
+  static List<CardModel> fromJsonList(List<dynamic> source) {
+    return source.map((item) => CardModel.fromMap(item)).toList();
   }
 }

@@ -12,6 +12,7 @@ import '../../controllers/TabChange_controller.dart';
 import '../../controllers/address_controller.dart';
 import '../../controllers/card_controller.dart';
 import '../../controllers/password_controller.dart';
+import '../../main.dart';
 import '../../utils/deleteCard.dart';
 import '../widgets/CategoryCard.dart';
 import 'DataViews/InfoScreenA.dart';
@@ -285,7 +286,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             );
 
                             if (confirmed == true) {
-                              final success = await deletePass(pass.id); // Replace with your actual model
+                              final success = await deletePass(pass.id);
                               if (success) {
                                 passwordController.fetchPasswords(); // Refresh the list
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password deleted.")));

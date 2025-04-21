@@ -34,8 +34,7 @@ class AddressModel {
     );
   }
 
-  static List<AddressModel> fromJsonList(String source) {
-    final List<dynamic> decoded = json.decode(source);
-    return decoded.map((item) => AddressModel.fromMap(item)).toList();
+  static List<AddressModel> fromJsonList(List<dynamic> source) {
+    return source.map((item) => AddressModel.fromMap(item)).toList();
   }
 }

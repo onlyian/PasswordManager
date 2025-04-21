@@ -3,8 +3,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_screen/utils/urlFetcher.dart';
 
-var store4 = GetStorage();
+import '../main.dart';
 
+var store4 = GetStorage();
+final userId = user.read("user_id");
 Future<bool> insertAddress(
     String name,
     String organization,
@@ -23,6 +25,7 @@ Future<bool> insertAddress(
   var response = await http.post(
     url,
     body: {
+      "user_id": userId.toString(),
       "name": name,
       "organization": organization,
       "phone": phone,

@@ -13,11 +13,11 @@ class PasswordInfoScreen extends StatefulWidget {
 }
 
 class _PasswordInfoScreenState extends State<PasswordInfoScreen> {
-  bool _obscurePassword = false;
+  bool obscurePassword = false;
 
   void _togglePasswordVisibility() {
     setState(() {
-      _obscurePassword = !_obscurePassword;
+      obscurePassword = !obscurePassword;
     });
   }
 
@@ -122,16 +122,16 @@ class _PasswordInfoScreenState extends State<PasswordInfoScreen> {
               leading: Icon(Icons.vpn_key),
               title: Text("Password"),
               subtitle: Text(
-                _obscurePassword ? "••••••••••" : pass.password,
+                obscurePassword ? pass.password : "••••••••••",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                    icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility),
                     onPressed: ()async {
-                     if(_obscurePassword) {
+                     if(!obscurePassword) {
                           if (await BiometricPassed()) {
                             _togglePasswordVisibility();
                           }

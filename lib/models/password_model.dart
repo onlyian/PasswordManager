@@ -19,8 +19,7 @@ class PasswordModel {
     );
   }
 
-  static List<PasswordModel> fromJsonList(String source) {
-    final List<dynamic> decoded = json.decode(source);
-    return decoded.map((item) => PasswordModel.fromMap(item)).toList();
+  static List<PasswordModel> fromJsonList(List<dynamic> source) {
+    return source.map((item) => PasswordModel.fromMap(item)).toList();
   }
 }

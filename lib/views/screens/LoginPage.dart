@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:local_auth/local_auth.dart';
 import 'package:login_screen/controllers/TabChange_controller.dart';
 import '../../utils/urlFetcher.dart';
+import 'package:login_screen/main.dart';
+
 
 var store = GetStorage();
 final TabChangeController tabController = Get.find<TabChangeController>();
@@ -148,8 +150,10 @@ class Login extends StatelessWidget {
 
                   if (jsonData["success"] == 1) {
 
+                    user.write("user_id", jsonData["user_id"]);
                     store.write("username", username);
                     Get.offAndToNamed("/home");
+                    Get.snackbar('Logged in ', 'Login successful!');
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Invalid credentials")),
