@@ -166,7 +166,7 @@ class SignupPage extends StatelessWidget {
                           SnackBar(content: Text("Signup successful! Welcome!")),
                         );
 
-                        Get.offAndToNamed("/home");
+                        Get.offAndToNamed("/login");
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Signup failed. Try again.")),
