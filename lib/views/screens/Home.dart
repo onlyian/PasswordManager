@@ -276,7 +276,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             final confirmed = await showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: Text("Delete Password?"),
+                                title: Text("Password?"),
                                 content: Text("Are you sure you want to delete this password?"),
                                 actions: [
                                   TextButton(onPressed: () => Navigator.pop(context, false), child: Text("Cancel")),

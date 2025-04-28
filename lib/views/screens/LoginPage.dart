@@ -50,11 +50,12 @@ class Login extends StatelessWidget {
 
             CircleAvatar(
               backgroundColor: Colors.grey[300],
-              backgroundImage: AssetImage('assets/images/user.png'),
+              backgroundImage: AssetImage('assets/images/img_1.png'),
               radius: 40,
             ),
             SizedBox(height: 20),
 
+            //welcome back text
             Text(
               'Welcome Back!',
               style: TextStyle(
@@ -118,97 +119,124 @@ class Login extends StatelessWidget {
               ),
             ),
 
-            ElevatedButton.icon(
-              onPressed: () async {
-                String username = usernameController.text.trim();
-                String password = passwordController.text.trim();
+            //login and biometric button
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
 
-                if (username.isEmpty || password.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Please enter both username and password")),
-                  );
-                  return;
-                }
+                SizedBox(width: 40),
+                //Login button
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    String username = usernameController.text.trim();
+                    String password = passwordController.text.trim();
 
-                String apiUrl = await fetchApiUrl();
-                await store.write("baseUrl", apiUrl);
-
-                var baseUrl = store.read("baseUrl") ?? "https://localhost";
-
-                var response = await http.post(
-                    Uri.parse //will change everytime we restart ngrok(ngrok http 80)
-                      ("$baseUrl/password-manager/login.php"),
-                    body: {
-                      "username": username,
-                      "master_password_hash": password,
-                    },
-                  );
-
-                  print(response.body);
-
-                  final jsonData = json.decode(response.body);
-
-                  if (jsonData["success"] == 1) {
-
-                    user.write("user_id", jsonData["user_id"]);
-                    store.write("username", username);
-                    Get.offAndToNamed("/home");
-                    Get.snackbar('Logged in ', 'Login successful!');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Invalid credentials")),
-                    );
-                  }
-              },
-
-              icon: Icon(Icons.mail),
-              label: Text(
-                'Login',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-              ),
-            ),
-
-            SizedBox(height: 10),
-            TextButton(
-              onPressed: ()async {
-
-                Get.snackbar('To enter:', 'Login with Biometric');
-
-                final LocalAuthentication auth = LocalAuthentication();
-
-                bool canCheckBiometrics = await auth.canCheckBiometrics;
-                bool isAuthenticated = false;
-
-                if (canCheckBiometrics) {
-                  try {
-                    isAuthenticated = await auth.authenticate(
-                      localizedReason: 'Please authenticate to login',
-                      options: const AuthenticationOptions(
-                        stickyAuth: true,
-                        biometricOnly: true,
-                      ),
-                    );
-                  } catch (e) {
-                    Get.snackbar('Error', 'Biometric authentication failed: $e');
-                  }
-                } else {
-                  Get.snackbar('Unauthorized', 'Biometric authentication is not available');
-                }
-                    if (isAuthenticated){
-              Get.offAndToNamed("/home");
-              Get.snackbar('Success', 'Biometric authentication passed');
-              } else {
-                      Get.snackbar('Failed', 'Authentication failed');
+                    if (username.isEmpty || password.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Please enter both username and password")),
+                      );
+                      return;
                     }
-                },
-              child: Text(
-                'Forgot Password?',
-                style: TextStyle(color: Colors.blue),
-              ),
+
+                    String apiUrl = await fetchApiUrl();
+                    await store.write("baseUrl", apiUrl);
+
+                    var baseUrl = store.read("baseUrl") ?? "https://localhost";
+
+                    var response = await http.post(
+                        Uri.parse //will change everytime we restart ngrok(ngrok http 80)
+                          ("$baseUrl/password-manager/login.php"),
+                        body: {
+                          "username": username,
+                          "master_password_hash": password,
+                        },
+                      );
+
+                      print(response.body);
+
+                      final jsonData = json.decode(response.body);
+
+                      if (jsonData["success"] == 1) {
+
+                        user.write("user_id", jsonData["user_id"]);
+                        store.write("username", username);
+                        Get.offAndToNamed("/home");
+                        Get.snackbar('Logged in ', 'Login successful!');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Invalid credentials")),
+                        );
+                      }
+                  },
+
+                  icon: Icon(Icons.mail),
+                  label: Text(
+                    'Login',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+
+
+                //Biometric login button
+                IconButton(
+                  icon: Icon(Icons.fingerprint, size: 40, color: Colors.white),
+                  onPressed: () async {
+                    String username = usernameController.text.trim();
+
+                    if (username.isEmpty) {
+                      Get.snackbar('Missing Username', 'Please enter your username first');
+                      return;
+                    }
+
+                    final LocalAuthentication auth = LocalAuthentication();
+                    bool canCheckBiometrics = await auth.canCheckBiometrics;
+                    bool isAuthenticated = false;
+
+                    if (canCheckBiometrics) {
+                      try {
+                        isAuthenticated = await auth.authenticate(
+                          localizedReason: 'Authenticate to continue',
+                          options: const AuthenticationOptions(
+                            stickyAuth: true,
+                            biometricOnly: true,
+                          ),
+                        );
+                      } catch (e) {
+                        Get.snackbar('Error', 'Biometric authentication failed: $e');
+                      }
+                    } else {
+                      Get.snackbar('Error', 'Biometric authentication not available');
+                    }
+
+                    if (isAuthenticated) {
+
+                      String apiUrl = await fetchApiUrl();
+                      var baseUrl = store.read("baseUrl") ?? apiUrl;
+
+                      var response = await http.post(
+                        Uri.parse("$baseUrl/password-manager/biometric_login.php"),
+                        body: {"username": username},
+                      );
+
+                      final jsonData = json.decode(response.body);
+
+                      if (jsonData["success"] == 1) {
+                        user.write("user_id", jsonData["user_id"]);
+                        store.write("username", username);
+                        Get.offAndToNamed("/home");
+                        Get.snackbar('Success', 'Logged in');
+                      } else {
+                        Get.snackbar('Failed', jsonData["message"] ?? "Login failed");
+                      }
+                    }
+                  },
+                ),
+              ],
             ),
+
           ],
         ),
       ),

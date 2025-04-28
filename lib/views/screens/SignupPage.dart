@@ -186,7 +186,7 @@ class SignupPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
 
-
+                //login screen navigation
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

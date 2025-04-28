@@ -3,10 +3,11 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:login_screen/utils/routes.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 final user = GetStorage();
 
 void main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   runApp(GetMaterialApp(
